@@ -1,5 +1,5 @@
 // SpaceX Historical Events Endpoint URL
-const spacexHistoryEndpoint = "https://api.spacexdata.com/v4/history";
+const spacexHistoryEndpoint = "https://api.spacexdata.com/v4/histor";
 
 function getMedia() {
   // Get NASA's media coverage of historical events
@@ -19,9 +19,13 @@ function getHistoricalEvents() {
 
 function appInit() {
   // Initialize appropriate functions
-  getHistoricalEvents().then((json) => {
-    console.log(json);
-  });
+  getHistoricalEvents()
+    .then((json) => {
+      console.log(json);
+    })
+    .catch((status) => {
+      console.log(status);
+    });
 }
 
 $(appInit);
