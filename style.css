@@ -3,13 +3,13 @@ body {
   flex-grow: 1;
   flex-direction: column;
   align-items: center;
-  padding: 0 1rem;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .header {
   display: flex;
   flex-direction: column;
+  padding: 0 1rem;
 }
 
 @media all and (min-width: 64rem) {
@@ -27,9 +27,16 @@ body {
 .event {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
+  padding: 1rem;
   border-bottom: 0.0625rem solid #0000002c;
+}
+
+.event:hover {
+  background-color: #0000000c;
+}
+
+.event:hover .event__headerArrow {
+  transform: rotate(180deg);
 }
 
 .event:last-child {
@@ -40,7 +47,14 @@ body {
 
 .event__header {
   display: flex;
-  flex-direction: column;
+}
+
+.event__headerArrow {
+  transition: transform 0.25s ease-in-out;
+}
+
+.event__headerContent {
+  flex-grow: 1;
 }
 
 .event__title {

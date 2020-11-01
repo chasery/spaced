@@ -24,10 +24,16 @@ function renderHistoricalEvents(sortedEvents) {
     const event = sortedEvents[i];
     const eventDate = formatDateString(event.event_date_utc);
     eventsContainer.children("ul").append(`
-      <li class="event" data-id="${event.id}">
+      <li id="jsEventItem" class="event" data-id="${event.id}">
         <div class="event__header">
-          <h2 class="event__title">${event.title}</h2>
-          <h3 class="event__date">${eventDate}</h3>
+          <div class="event__headerContent">
+            <h2 class="event__title">${event.title}</h2>
+            <h3 class="event__date">${eventDate}</h3>
+          </div>
+          <img class="event__headerArrow" src="./svg/arrow.svg" />
+        </div>
+        <div class="event__body">
+          <p>${event.details}</p>
         </div>
       </li>
     `);
