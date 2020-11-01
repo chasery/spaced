@@ -13,9 +13,46 @@ body {
 }
 
 @media all and (min-width: 64rem) {
-  .header {
+  .header,
+  .eventsList {
     width: 50rem;
   }
+}
+
+.eventsList__wrapper {
+  list-style: none;
+  padding-left: 0;
+}
+
+.event {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 0.0625rem solid #0000002c;
+}
+
+.event:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.event__header {
+  display: flex;
+  flex-direction: column;
+}
+
+.event__title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.event__date {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 .hidden {

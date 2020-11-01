@@ -6,16 +6,29 @@ function getMedia() {
   console.log("`getMedia` ran");
 }
 
+function formatDateString(date) {
+  // Returns a human legible date string
+  const dateObj = new Date(date);
+  const year = dateObj.getUTCFullYear();
+  const month = dateObj.getUTCMonth() + 1;
+  const day = dateObj.getUTCDate();
+
+  return `${month}/${day}/${year}`;
+}
+
 function renderHistoricalEvents(sortedEvents) {
   // Renders each of the  events in the sorted array
   const eventsContainer = $("#jsEventsList");
   eventsContainer.removeClass("hidden");
   for (let i = 0; i < sortedEvents.length; i++) {
     const event = sortedEvents[i];
+    const eventDate = formatDateString(event.event_date_utc);
     eventsContainer.children("ul").append(`
       <li class="event" data-id="${event.id}">
-        <h2 class="event__title">${event.title}</h2>
-        <h3 class="event__date">${event.event_date_utc}</h3>
+        <div class="event__header">
+          <h2 class="event__title">${event.title}</h2>
+          <h3 class="event__date">${eventDate}</h3>
+        </div>
       </li>
     `);
   }
