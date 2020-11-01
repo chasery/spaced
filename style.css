@@ -25,18 +25,12 @@ body {
 }
 
 .event {
-  display: flex;
-  flex-direction: column;
   padding: 1rem;
   border-bottom: 0.0625rem solid #0000002c;
 }
 
 .event:hover {
   background-color: #0000000c;
-}
-
-.event:hover .event__headerArrow {
-  transform: rotate(180deg);
 }
 
 .event:last-child {
@@ -67,6 +61,27 @@ body {
   margin: 0;
   font-size: 1rem;
   font-weight: 400;
+}
+
+.event__body {
+  height: 0;
+  opacity: 0;
+  overflow: scroll;
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Active state styling */
+.event.active {
+  background-color: #0000000c;
+}
+
+.event.active .event__headerArrow {
+  transform: rotate(180deg);
+}
+
+.event.active .event__body {
+  height: auto;
+  opacity: 1;
 }
 
 .hidden {

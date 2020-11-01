@@ -6,6 +6,14 @@ function getMedia() {
   console.log("`getMedia` ran");
 }
 
+function handleEventClick() {
+  $("#jsEventsList").on("click", "#jsEventItem", function (event) {
+    const target = $(event.currentTarget);
+    target.siblings().removeClass("active");
+    target.toggleClass("active");
+  });
+}
+
 function formatDateString(date) {
   // Returns a human legible date string
   const dateObj = new Date(date);
@@ -67,6 +75,7 @@ function appInit() {
     .catch((status) => {
       console.log(status);
     });
+  handleEventClick();
 }
 
 $(appInit);
