@@ -8,4 +8,9 @@ function getHistoricalEvents() {
   console.log("`getHistoricalEvents` ran");
 }
 
-$(getHistoricalEvents);
+function appInit() {
+  // Initialize appropriate functions
+  getHistoricalEvents();
+}
+
+$(appInit);
