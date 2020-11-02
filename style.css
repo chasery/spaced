@@ -3,13 +3,13 @@ body {
   flex-grow: 1;
   flex-direction: column;
   align-items: center;
-  padding: 0 1rem;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .header {
   display: flex;
   flex-direction: column;
+  padding: 0 1rem;
 }
 
 @media all and (min-width: 64rem) {
@@ -25,11 +25,12 @@ body {
 }
 
 .event {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
+  padding: 1rem;
   border-bottom: 0.0625rem solid #0000002c;
+}
+
+.event:hover {
+  background-color: #0000000c;
 }
 
 .event:last-child {
@@ -40,7 +41,14 @@ body {
 
 .event__header {
   display: flex;
-  flex-direction: column;
+}
+
+.event__headerArrow {
+  transition: transform 0.25s ease-in-out;
+}
+
+.event__headerContent {
+  flex-grow: 1;
 }
 
 .event__title {
@@ -55,6 +63,100 @@ body {
   font-weight: 400;
 }
 
+.event__body {
+  height: 0;
+  opacity: 0;
+  overflow: scroll;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.event__nasaContent {
+  position: relative;
+  min-height: 100px;
+}
+
+.event__nasaContent .loader {
+  transform: scale(0.5);
+}
+
+/* Active state styling */
+.event.active {
+  background-color: #0000000c;
+}
+
+.event.active .event__headerArrow {
+  transform: rotate(180deg);
+}
+
+.event.active .event__body {
+  height: auto;
+  opacity: 1;
+}
+
 .hidden {
   display: none;
+}
+
+/* Code Pen Space Loader
+https://codepen.io/peekaboo07/pen/WpqyVa
+*/
+.loader {
+  position: absolute;
+  top: 50%;
+  margin-top: -35px;
+  left: 50%;
+  margin-left: -35px;
+  width: 70px;
+  height: 70px;
+}
+
+.moon-loader {
+  margin-top: -17px;
+  margin-left: -17px;
+  width: 34px;
+  height: 34px;
+}
+
+.loader-circle {
+  box-sizing: border-box;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.21);
+  animation: rotate 2s infinite;
+  animation-timing-function: linear;
+}
+.loader-circle > div {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin-left: 5px;
+  border-radius: 50%;
+  background-color: #000000;
+}
+.loader-circle > div.loader-moon-size {
+  width: 5px;
+  height: 5px;
+  margin-left: 2.5px;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+.loader-sun {
+  position: absolute;
+  left: 50%;
+  margin-left: -9.5px;
+  top: 50%;
+  margin-top: -9.5px;
+  width: 21px;
+  height: 21px;
+  background-color: #000000;
+  border-radius: 50%;
 }

@@ -18,12 +18,27 @@
     <header class="header">
       <h1>Spaced</h1>
       <p>
-        An app dedicated to showcasing SpaceX's historical events and NASA's
-        supporting media coverage of the event.
+        Are you curious about the history of SpaceX? Spaced keeps you informed
+        by marrying the historical events of the monolithic space company with
+        NASA's media coverage.
       </p>
     </header>
-    <div id="jsEventsList" class="eventsList hidden">
-      <ul class="eventsList__wrapper"></ul>
+    <div id="jsEventsList" class="eventsList">
+      <div class="eventList__loader">
+        <div class="loader">
+          <div class="loader-circle">
+            <div>
+              <div class="loader moon-loader">
+                <div class="loader-circle">
+                  <div class="loader-moon-size"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="loader-sun"></div>
+        </div>
+      </div>
+      <ul class="eventsList__wrapper hidden"></ul>
     </div>
     <script
       src="https://code.jquery.com/jquery-3.3.1.js"
