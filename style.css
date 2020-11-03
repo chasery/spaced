@@ -71,12 +71,47 @@ body {
 }
 
 .event__nasaContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
-  min-height: 100px;
+  min-height: 6rem;
 }
 
 .event__nasaContent .loader {
   transform: scale(0.5);
+}
+
+.images {
+  line-height: 0;
+
+  -webkit-column-count: 1;
+  -webkit-column-gap: 0;
+  -moz-column-count: 1;
+  -moz-column-gap: 0;
+  column-count: 1;
+  column-gap: 0;
+}
+
+.images img {
+  width: 100%;
+  height: auto;
+  margin-top: 0.5rem;
+}
+
+@media all and (min-width: 64rem) {
+  .images {
+    -moz-column-count: auto;
+    -moz-column-gap: 0.5rem;
+    -webkit-column-count: auto;
+    -webkit-column-gap: 0.5rem;
+    column-count: auto;
+    column-gap: 0.5rem;
+  }
+
+  .images img {
+    max-width: calc(33% - 0.166rem);
+  }
 }
 
 /* Active state styling */
@@ -95,6 +130,10 @@ body {
 
 .hidden {
   display: none;
+}
+
+.error {
+  color: crimson;
 }
 
 /* Code Pen Space Loader
