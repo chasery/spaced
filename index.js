@@ -26,13 +26,9 @@ const nasaImagesApi = "https://images-api.nasa.gov/";
 function formatQueryString(date) {
   // Returns a formatted query string for the NASA API
   const dateObj = new Date(date);
-  const dateString =
-    dateObj.getUTCFullYear() +
-    "-" +
-    ("0" + (dateObj.getUTCMonth() + 1)).slice(-2) +
-    "-" +
-    ("0" + dateObj.getUTCDate()).slice(-2);
-  return `q=spacex+${dateString}`;
+  const year = dateObj.getUTCFullYear();
+  const dateString = year + "-" + ("0" + (dateObj.getUTCMonth() + 1)).slice(-2);
+  return `q=${dateString}%20spacex&year_start=${year}&year_end=${year}&media_type=image`;
 }
 
 function getMedia(date) {
@@ -106,38 +102,33 @@ function parseMedia(obj) {
   if (obj.items) {
     for (let i = 0; i < obj.items.length; i++) {
       for (let j = 0; j < obj.items[i].data.length; j++) {
-        let mediaItem = {
-          links: obj.items[i].links,
-          title: obj.items[i].data[j].nasa_id,
+        let imageItem = {
+          href: obj.items[i].links[0].href,
+          title: obj.items[i].data[j].title,
+          location: obj.items[i].data[j].location,
+          description: obj.items[i].data[j].description,
           type: obj.items[i].data[j].media_type,
         };
-        mediaItems.push(mediaItem);
+        mediaItems.push(imageItem);
       }
     }
   }
   return mediaItems;
 }
 
-function createMediaElements(media) {
+function createImageElements(images) {
   // Returns a string of elements based on the data type: image, video, audio
-  const mediaList = [];
-  if (media.length) {
-    for (let i = 0; i < media.length; i++) {
-      let current = media[i];
-      console.log(current);
-      if (current.type === "image") {
-        mediaList.push(`<p>${current.title} - ${current.type}</p>`);
-      } else if (current.type === "video") {
-        mediaList.push(`<p>${current.title} - ${current.type}</p>`);
-      } else if (current.type === "audio") {
-        mediaList.push(`<p>${current.title} - ${current.type}</p>`);
-      } else {
-        mediaList.push(`<p class="error">Unknown media format.</p>`);
-      }
+  const imageList = [];
+  if (images.length) {
+    for (let i = 0; i < images.length; i++) {
+      let current = images[i];
+      imageList.push(`
+        <img src="${current.href}" width="100%" alt="${current.title} - ${current.location} - ${current.description}"/>
+      `);
     }
-    return mediaList.join("");
+    return imageList.join("");
   }
-  return `<p>No media for the is event.</p>`;
+  return `<p><strong>No NASA imagery available around the time of the event.</strong></p>`;
 }
 
 /********** EVENT HANDLER FUNCTIONS **********/
@@ -149,9 +140,9 @@ function handleEventClick() {
     target.addClass("active").siblings().removeClass("active");
     target.find("#jsNasaContent").html(createLoader());
     getMedia(target.data("date")).then((json) => {
-      const media = parseMedia(json.collection);
+      const images = parseMedia(json.collection);
       setTimeout(function () {
-        target.find("#jsNasaContent").html(createMediaElements(media));
+        target.find("#jsNasaContent").html(createImageElements(images));
       }, 2000);
     });
   });

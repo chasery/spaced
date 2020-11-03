@@ -71,8 +71,12 @@ body {
 }
 
 .event__nasaContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
   position: relative;
-  min-height: 100px;
+  min-height: 6rem;
 }
 
 .event__nasaContent .loader {
