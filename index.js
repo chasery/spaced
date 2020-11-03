@@ -46,7 +46,7 @@ function getMedia(date) {
 
 /********** TEMPLATE GENERATION FUNCTIONS **********/
 
-function createLoader() {
+function createLoaderElement() {
   // Returns a loading indicator
   return `
     <div class="loader">
@@ -57,6 +57,16 @@ function createLoader() {
         </div>
       </div>
       <div class="loader-sun"></div>
+    </div>
+  `;
+}
+
+function createErrorElement(status, text) {
+  // Returns a loading indicator
+  return `
+    <div class="error">
+      <h3>${status}</h3>
+      <p>${text}</p>
     </div>
   `;
 }
@@ -123,12 +133,12 @@ function createImageElements(images) {
     for (let i = 0; i < images.length; i++) {
       let current = images[i];
       imageList.push(`
-        <img src="${current.href}" width="100%" alt="${current.title} - ${current.location} - ${current.description}"/>
+        <img src="${current.href}" alt="${current.title} - ${current.location} - ${current.description}"/>
       `);
     }
-    return imageList.join("");
+    return `<div class="images">${imageList.join("")}</div>`;
   }
-  return `<p><strong>No NASA imagery available around the time of the event.</strong></p>`;
+  return `<p class="noImages"><strong>No NASA imagery available around the time of the event.</strong></p>`;
 }
 
 /********** EVENT HANDLER FUNCTIONS **********/
@@ -138,13 +148,24 @@ function handleEventClick() {
   $("#jsEventsList").on("click", "#jsEventItem", function (event) {
     const target = $(event.currentTarget);
     target.addClass("active").siblings().removeClass("active");
-    target.find("#jsNasaContent").html(createLoader());
-    getMedia(target.data("date")).then((json) => {
-      const images = parseMedia(json.collection);
-      setTimeout(function () {
-        target.find("#jsNasaContent").html(createImageElements(images));
-      }, 2000);
-    });
+    target.find("#jsNasaContent").html(createLoaderElement());
+    getMedia(target.data("date"))
+      .then((json) => {
+        const images = parseMedia(json.collection);
+        setTimeout(function () {
+          target.find("#jsNasaContent").html(createImageElements(images));
+        }, 2000);
+      })
+      .catch((status) => {
+        target
+          .find("#jsNasaContent")
+          .html(
+            createErrorElement(
+              status,
+              "Something is wrong, please try again later!"
+            )
+          );
+      });
   });
 }
 
@@ -155,9 +176,9 @@ function handleToggleClass(element, cssClass) {
 
 function appInit() {
   // Initialize appropriate functions
+  const eventsContainer = $("#jsEventsList");
   getHistoricalEvents()
     .then((json) => {
-      const eventsContainer = $("#jsEventsList");
       const sortedEvents = sortHistoricalEvents(json);
       setTimeout(function () {
         eventsContainer
@@ -174,7 +195,13 @@ function appInit() {
       }, 2000);
     })
     .catch((status) => {
-      console.log(status);
+      console.log("hi");
+      eventsContainer.html(
+        createErrorElement(
+          status,
+          "Something is wrong, please try again later!"
+        )
+      );
     });
   handleEventClick();
 }
