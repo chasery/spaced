@@ -93,6 +93,10 @@ body {
   column-gap: 0;
 }
 
+.images p.noImages {
+  font-weight: 700;
+}
+
 .images img {
   width: 100%;
   height: auto;
