@@ -112,6 +112,7 @@ function parseMedia(obj) {
   if (obj.items) {
     for (let i = 0; i < obj.items.length; i++) {
       for (let j = 0; j < obj.items[i].data.length; j++) {
+        // Foreach
         let imageItem = {
           href: obj.items[i].links[0].href,
           title: obj.items[i].data[j].title,
@@ -129,16 +130,13 @@ function parseMedia(obj) {
 function createImageElements(images) {
   // Returns a string of elements based on the data type: image, video, audio
   const imageList = [];
-  if (images.length) {
-    for (let i = 0; i < images.length; i++) {
-      let current = images[i];
-      imageList.push(`
+  for (let i = 0; i < images.length; i++) {
+    let current = images[i];
+    imageList.push(`
         <img src="${current.href}" alt="${current.title} - ${current.location} - ${current.description}"/>
       `);
-    }
-    return `<div class="images">${imageList.join("")}</div>`;
   }
-  return `<p class="noImages"><strong>No NASA imagery available around the time of the event.</strong></p>`;
+  return imageList;
 }
 
 /********** EVENT HANDLER FUNCTIONS **********/
@@ -147,31 +145,37 @@ function handleEventClick() {
   // Handles the click event on an event
   $("#jsEventsList").on("click", "#jsEventItem", function (event) {
     const target = $(event.currentTarget);
-    target.addClass("active").siblings().removeClass("active");
-    target.find("#jsNasaContent").html(createLoaderElement());
-    getMedia(target.data("date"))
-      .then((json) => {
-        const images = parseMedia(json.collection);
-        setTimeout(function () {
-          target.find("#jsNasaContent").html(createImageElements(images));
-        }, 2000);
-      })
-      .catch((status) => {
-        target
-          .find("#jsNasaContent")
-          .html(
-            createErrorElement(
-              status,
-              "Something is wrong, please try again later!"
-            )
-          );
-      });
+    if (!target.hasClass("active") && !target.find("div.images").length) {
+      console.log(target);
+      target.toggleClass("active").siblings().removeClass("active");
+      target.find("#jsNasaContent").html(createLoaderElement());
+      getMedia(target.data("date"))
+        .then((json) => {
+          const images = parseMedia(json.collection);
+          let result;
+          if (images.length) {
+            // Map
+            const imageElements = createImageElements(images);
+            result = `<div class="images">${imageElements.join("")}</div>`;
+          } else {
+            result = `<div class="images"><p class="noImages">No NASA imagery available around the time of the event.</p></div>`;
+          }
+          target.find("#jsNasaContent").html(result);
+        })
+        .catch((status) => {
+          target
+            .find("#jsNasaContent")
+            .html(
+              createErrorElement(
+                status,
+                "Something is wrong, please try again later!"
+              )
+            );
+        });
+    } else {
+      target.toggleClass("active");
+    }
   });
-}
-
-function handleToggleClass(element, cssClass) {
-  // Event handler for toggling a class for the provided element
-  element.toggleClass(cssClass);
 }
 
 function appInit() {
@@ -180,19 +184,11 @@ function appInit() {
   getHistoricalEvents()
     .then((json) => {
       const sortedEvents = sortHistoricalEvents(json);
-      setTimeout(function () {
-        eventsContainer
-          .children("ul.eventsList__wrapper")
-          .html(createHistoricalEvents(sortedEvents));
-        handleToggleClass(
-          eventsContainer.children("div.eventList__loader"),
-          "hidden"
-        );
-        handleToggleClass(
-          eventsContainer.children("ul.eventsList__wrapper"),
-          "hidden"
-        );
-      }, 2000);
+      eventsContainer
+        .children("ul.eventsList__wrapper")
+        .html(createHistoricalEvents(sortedEvents));
+      eventsContainer.children("div.eventList__loader").toggleClass("hidden");
+      eventsContainer.children("ul.eventsList__wrapper").toggleClass("hidden");
     })
     .catch((status) => {
       console.log("hi");
