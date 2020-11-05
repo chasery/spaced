@@ -20,7 +20,6 @@ function sortHistoricalEvents(events) {
 }
 
 // NASA API and Key
-// const nasaApiKey = "zdMex2SGsIAoKYjFPgu01yU62Vuk1hgEP5DD31wA";
 const nasaImagesApi = "https://images-api.nasa.gov/";
 
 function formatQueryString(date) {
@@ -108,34 +107,24 @@ function createDisplayDate(date) {
 
 function parseMedia(obj) {
   // Returns an array with all of our event media objects
-  const mediaItems = [];
-  if (obj.items) {
-    for (let i = 0; i < obj.items.length; i++) {
-      for (let j = 0; j < obj.items[i].data.length; j++) {
-        // Foreach
-        let imageItem = {
-          href: obj.items[i].links[0].href,
-          title: obj.items[i].data[j].title,
-          location: obj.items[i].data[j].location,
-          description: obj.items[i].data[j].description,
-          type: obj.items[i].data[j].media_type,
-        };
-        mediaItems.push(imageItem);
-      }
-    }
-  }
+  const mediaItems = obj.items.map((image) => {
+    const imageObj = {
+      href: image.links[0].href,
+      title: image.data[0].title,
+      location: image.data[0].location,
+      description: image.data[0].description,
+      type: image.data[0].media_type,
+    };
+    return imageObj;
+  });
   return mediaItems;
 }
 
 function createImageElements(images) {
-  // Returns a string of elements based on the data type: image, video, audio
-  const imageList = [];
-  for (let i = 0; i < images.length; i++) {
-    let current = images[i];
-    imageList.push(`
-        <img src="${current.href}" alt="${current.title} - ${current.location} - ${current.description}"/>
-      `);
-  }
+  // Returns an array of image elements
+  const imageList = images.map((image) => {
+    return `<img src="${image.href}" alt="${image.title} - ${image.location} - ${image.description}"/>`;
+  });
   return imageList;
 }
 
@@ -146,7 +135,6 @@ function handleEventClick() {
   $("#jsEventsList").on("click", "#jsEventItem", function (event) {
     const target = $(event.currentTarget);
     if (!target.hasClass("active") && !target.find("div.images").length) {
-      console.log(target);
       target.toggleClass("active").siblings().removeClass("active");
       target.find("#jsNasaContent").html(createLoaderElement());
       getMedia(target.data("date"))
@@ -154,7 +142,6 @@ function handleEventClick() {
           const images = parseMedia(json.collection);
           let result;
           if (images.length) {
-            // Map
             const imageElements = createImageElements(images);
             result = `<div class="images">${imageElements.join("")}</div>`;
           } else {
@@ -191,7 +178,6 @@ function appInit() {
       eventsContainer.children("ul.eventsList__wrapper").toggleClass("hidden");
     })
     .catch((status) => {
-      console.log("hi");
       eventsContainer.html(
         createErrorElement(
           status,
