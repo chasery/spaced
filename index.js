@@ -20,7 +20,6 @@ function sortHistoricalEvents(events) {
 }
 
 // NASA API and Key
-// const nasaApiKey = "zdMex2SGsIAoKYjFPgu01yU62Vuk1hgEP5DD31wA";
 const nasaImagesApi = "https://images-api.nasa.gov/";
 
 function formatQueryString(date) {
@@ -78,13 +77,19 @@ function createHistoricalEvents(sortedEvents) {
     const event = sortedEvents[i];
     const eventDate = createDisplayDate(event.event_date_utc);
     eventsList.push(`
-      <li id="jsEventItem" class="event" data-id="${event.id}" data-date="${event.event_date_utc}">
+      <li id="jsEventItem" class="event" role="button" data-id="${event.id}" data-date="${event.event_date_utc}">
         <div class="event__header">
           <div class="event__headerContent">
             <h2 class="event__title">${event.title}</h2>
             <h3 class="event__date">${eventDate}</h3>
           </div>
-          <img class="event__headerArrow" src="./svg/arrow.svg" />
+          <svg class="event__headerArrow" width="19px" height="10px" viewBox="0 0 19 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Custom-Preset-2" transform="translate(-1046.000000, -311.000000)" fill-rule="nonzero">
+                <path d="M1062.77652,311.254783 L1055.13043,318.90087 L1047.48435,311.254783 C1047.14478,310.915217 1046.59435,310.915217 1046.25478,311.254783 C1045.91522,311.594348 1045.91522,312.144783 1046.25478,312.484348 L1054.51565,320.745217 C1054.68565,320.915217 1054.90783,321 1055.13043,321 C1055.35304,321 1055.57522,320.915217 1055.74522,320.745217 L1064.00609,312.484348 C1064.34565,312.144783 1064.34565,311.594348 1064.00609,311.254783 C1063.66652,310.915217 1063.11609,310.915217 1062.77652,311.254783 Z" id="Path"></path>
+              </g>
+            </g>
+          </svg>
         </div>
         <div class="event__body">
           <p>${event.details}</p>
@@ -108,34 +113,24 @@ function createDisplayDate(date) {
 
 function parseMedia(obj) {
   // Returns an array with all of our event media objects
-  const mediaItems = [];
-  if (obj.items) {
-    for (let i = 0; i < obj.items.length; i++) {
-      for (let j = 0; j < obj.items[i].data.length; j++) {
-        // Foreach
-        let imageItem = {
-          href: obj.items[i].links[0].href,
-          title: obj.items[i].data[j].title,
-          location: obj.items[i].data[j].location,
-          description: obj.items[i].data[j].description,
-          type: obj.items[i].data[j].media_type,
-        };
-        mediaItems.push(imageItem);
-      }
-    }
-  }
+  const mediaItems = obj.items.map((image) => {
+    const imageObj = {
+      href: image.links[0].href,
+      title: image.data[0].title,
+      location: image.data[0].location,
+      description: image.data[0].description,
+      type: image.data[0].media_type,
+    };
+    return imageObj;
+  });
   return mediaItems;
 }
 
 function createImageElements(images) {
-  // Returns a string of elements based on the data type: image, video, audio
-  const imageList = [];
-  for (let i = 0; i < images.length; i++) {
-    let current = images[i];
-    imageList.push(`
-        <img src="${current.href}" alt="${current.title} - ${current.location} - ${current.description}"/>
-      `);
-  }
+  // Returns an array of image elements
+  const imageList = images.map((image) => {
+    return `<img src="${image.href}" alt="${image.title} - ${image.location} - ${image.description}" />`;
+  });
   return imageList;
 }
 
@@ -145,8 +140,7 @@ function handleEventClick() {
   // Handles the click event on an event
   $("#jsEventsList").on("click", "#jsEventItem", function (event) {
     const target = $(event.currentTarget);
-    if (!target.hasClass("active") && !target.find("div.images").length) {
-      console.log(target);
+    if (!target.find("div.images").length) {
       target.toggleClass("active").siblings().removeClass("active");
       target.find("#jsNasaContent").html(createLoaderElement());
       getMedia(target.data("date"))
@@ -154,7 +148,6 @@ function handleEventClick() {
           const images = parseMedia(json.collection);
           let result;
           if (images.length) {
-            // Map
             const imageElements = createImageElements(images);
             result = `<div class="images">${imageElements.join("")}</div>`;
           } else {
@@ -173,7 +166,7 @@ function handleEventClick() {
             );
         });
     } else {
-      target.toggleClass("active");
+      target.toggleClass("active").siblings().removeClass("active");
     }
   });
 }
@@ -191,7 +184,6 @@ function appInit() {
       eventsContainer.children("ul.eventsList__wrapper").toggleClass("hidden");
     })
     .catch((status) => {
-      console.log("hi");
       eventsContainer.html(
         createErrorElement(
           status,
