@@ -77,13 +77,19 @@ function createHistoricalEvents(sortedEvents) {
     const event = sortedEvents[i];
     const eventDate = createDisplayDate(event.event_date_utc);
     eventsList.push(`
-      <li id="jsEventItem" class="event" data-id="${event.id}" data-date="${event.event_date_utc}">
+      <li id="jsEventItem" class="event" role="button" data-id="${event.id}" data-date="${event.event_date_utc}">
         <div class="event__header">
           <div class="event__headerContent">
             <h2 class="event__title">${event.title}</h2>
             <h3 class="event__date">${eventDate}</h3>
           </div>
-          <img class="event__headerArrow" src="./svg/arrow.svg" />
+          <svg class="event__headerArrow" width="19px" height="10px" viewBox="0 0 19 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Custom-Preset-2" transform="translate(-1046.000000, -311.000000)" fill-rule="nonzero">
+                <path d="M1062.77652,311.254783 L1055.13043,318.90087 L1047.48435,311.254783 C1047.14478,310.915217 1046.59435,310.915217 1046.25478,311.254783 C1045.91522,311.594348 1045.91522,312.144783 1046.25478,312.484348 L1054.51565,320.745217 C1054.68565,320.915217 1054.90783,321 1055.13043,321 C1055.35304,321 1055.57522,320.915217 1055.74522,320.745217 L1064.00609,312.484348 C1064.34565,312.144783 1064.34565,311.594348 1064.00609,311.254783 C1063.66652,310.915217 1063.11609,310.915217 1062.77652,311.254783 Z" id="Path"></path>
+              </g>
+            </g>
+          </svg>
         </div>
         <div class="event__body">
           <p>${event.details}</p>
@@ -123,7 +129,7 @@ function parseMedia(obj) {
 function createImageElements(images) {
   // Returns an array of image elements
   const imageList = images.map((image) => {
-    return `<img src="${image.href}" alt="${image.title} - ${image.location} - ${image.description}"/>`;
+    return `<img src="${image.href}" alt="${image.title} - ${image.location} - ${image.description}" />`;
   });
   return imageList;
 }
@@ -134,7 +140,7 @@ function handleEventClick() {
   // Handles the click event on an event
   $("#jsEventsList").on("click", "#jsEventItem", function (event) {
     const target = $(event.currentTarget);
-    if (!target.hasClass("active") && !target.find("div.images").length) {
+    if (!target.find("div.images").length) {
       target.toggleClass("active").siblings().removeClass("active");
       target.find("#jsNasaContent").html(createLoaderElement());
       getMedia(target.data("date"))
@@ -160,7 +166,7 @@ function handleEventClick() {
             );
         });
     } else {
-      target.toggleClass("active");
+      target.toggleClass("active").siblings().removeClass("active");
     }
   });
 }

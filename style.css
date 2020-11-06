@@ -3,13 +3,50 @@ body {
   flex-grow: 1;
   flex-direction: column;
   align-items: center;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Roboto", sans-serif;
+  background: #f2f1f0 url("./images/spacex-background.jpg") fixed no-repeat;
+  background-size: cover;
+}
+
+h1,
+h2 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+}
+
+h3 {
+  font-weight: 400;
+}
+
+p {
+  line-height: 1.5rem;
 }
 
 .header {
   display: flex;
   flex-direction: column;
-  padding: 0 1rem;
+  padding: 3rem;
+  text-align: center;
+}
+
+.header__title {
+  text-transform: uppercase;
+  font-size: 2.5rem;
+  letter-spacing: 0.125rem;
+}
+
+.header__description strong {
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.event__headerArrow {
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.event__headerArrow g {
+  fill: #000000;
 }
 
 @media all and (min-width: 64rem) {
@@ -17,30 +54,49 @@ body {
   .eventsList {
     width: 50rem;
   }
+  .eventsList {
+    margin-bottom: 4rem;
+  }
 }
-
+.eventsList {
+  background-image: linear-gradient(180deg, #f2f1f0, #eae7e4);
+  border-radius: 0.25rem;
+  box-shadow: 0.25rem 0.75rem 2rem #00000057;
+  overflow: hidden;
+}
 .eventsList__wrapper {
-  list-style: none;
+  margin: 0;
   padding-left: 0;
+  list-style: none;
 }
 
 .event {
-  padding: 1rem;
-  border-bottom: 0.0625rem solid #0000002c;
+  border-bottom: 0.0625rem solid #d6d3d1;
 }
 
-.event:hover {
-  background-color: #0000000c;
+.event:hover .event__header,
+.active.event .event__header,
+.event:hover .event__headerArrow g,
+.active.event .event__headerArrow g {
+  color: #2b26d1;
+  fill: #2b26d1;
 }
 
 .event:last-child {
   margin-bottom: 0;
-  padding-bottom: 0;
   border-bottom: none;
 }
 
 .event__header {
   display: flex;
+  padding: 1.5rem 2rem;
+  background-color: transparent;
+}
+
+.active .event__header {
+  position: relative;
+  z-index: 10;
+  box-shadow: 0.125rem 0.125rem 1rem #00000011;
 }
 
 .event__headerArrow {
@@ -68,6 +124,15 @@ body {
   opacity: 0;
   overflow: scroll;
   transition: opacity 0.5s ease-in-out;
+  background-color: #eae7e4;
+}
+
+.active .event__body {
+  padding: 1.5rem 2rem;
+}
+
+.event__body > p {
+  margin: 0;
 }
 
 .event__nasaContent {
@@ -76,6 +141,7 @@ body {
   align-items: center;
   position: relative;
   min-height: 6rem;
+  margin-top: 1.5rem;
 }
 
 .event__nasaContent .loader {
@@ -83,46 +149,29 @@ body {
 }
 
 .images {
-  line-height: 0;
-
-  -webkit-column-count: 1;
-  -webkit-column-gap: 0;
-  -moz-column-count: 1;
-  -moz-column-gap: 0;
-  column-count: 1;
-  column-gap: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 0.5rem;
+  align-items: stretch;
+  justify-items: stretch;
 }
 
 .images p.noImages {
+  grid-column: 1/-1;
   font-weight: 700;
 }
 
 .images img {
-  width: 100%;
-  height: auto;
-  margin-top: 0.5rem;
+  max-width: 100%;
 }
 
 @media all and (min-width: 64rem) {
   .images {
-    -moz-column-count: auto;
-    -moz-column-gap: 0.5rem;
-    -webkit-column-count: auto;
-    -webkit-column-gap: 0.5rem;
-    column-count: auto;
-    column-gap: 0.5rem;
-  }
-
-  .images img {
-    max-width: calc(33% - 0.166rem);
+    grid-template-columns: 1fr 1fr;
   }
 }
 
 /* Active state styling */
-.event.active {
-  background-color: #0000000c;
-}
-
 .event.active .event__headerArrow {
   transform: rotate(180deg);
 }
