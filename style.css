@@ -125,6 +125,7 @@ p {
   overflow: scroll;
   transition: opacity 0.5s ease-in-out;
   background-color: #eae7e4;
+  overflow: hidden;
 }
 
 .active .event__body {
