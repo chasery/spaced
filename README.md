@@ -1,5 +1,5 @@
 # Spaced
-https://chasery.github.io/spaced-api-capstone/
+https://chasery.github.io/spaced/
 
 **Description** 
 A client-side app for viewing SpaceX's historical events and NASA's supporting image coverage of the event if available.
